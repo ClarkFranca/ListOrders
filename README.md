@@ -1,4 +1,4 @@
-# ListOrders — Desafio Técnico Full Stack Pleno
+# ListOrders — Desafio Técnico
 
 Este projeto é um sistema simplificado de gestão e faturamento de **Pedidos**, desenvolvido como desafio técnico.
 
