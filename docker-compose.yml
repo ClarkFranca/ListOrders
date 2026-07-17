@@ -1,0 +1,55 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: listorders-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: listorders
+      POSTGRES_USER: listorders
+      POSTGRES_PASSWORD: listorders
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U listorders -d listorders"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./src/Api
+      dockerfile: Dockerfile
+    container_name: listorders-api
+    ports:
+      - "5000:5000"
+    environment:
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=listorders;Username=listorders;Password=listorders
+      - OrderProcessorUrl=http://listorders-processor:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  order-processor:
+    build:
+      context: ./services/order-processor
+      dockerfile: Dockerfile
+    container_name: listorders-processor
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api:5000/api
+
+  web:
+    build:
+      context: ./src/Web
+      dockerfile: Dockerfile
+    container_name: listorders-web
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:
+
