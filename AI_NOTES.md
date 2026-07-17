@@ -1,39 +1,219 @@
 # AI_NOTES.md — Relato de Uso de Inteligência Artificial
 
-Este documento descreve como as ferramentas de Inteligência Artificial foram utilizadas no desenvolvimento do projeto **ListOrders**, as decisões tomadas para aumentar a produtividade e como a arquitetura do projeto foi pensada para otimizar o fluxo de trabalho com IAs.
+Este documento descreve como ferramentas de Inteligência Artificial foram utilizadas durante o desenvolvimento do projeto **ListOrders**, quais decisões permaneceram sob responsabilidade do desenvolvedor e de que forma a IA foi utilizada como aceleradora de produtividade, seguindo um modelo de *pair programming*.
 
 ---
 
-## 1. Onde a IA Ajudou
+# Objetivo do Uso da IA
 
-A IA foi uma parceira ativa de pair programming, atuando em:
-* **Definição da Arquitetura Pragmática**: Auxiliou no mapeamento do projeto utilizando referencias de projetos pessoais para encontrar oportunidades de simplificação arquitetural (corte de mappings XML, remoção de interfaces desnecessárias, agregação de DTOs nas pastas dos Controllers).
-* **Geração de Código de Infraestrutura**: Escrita rápida do `docker-compose.yml` e do script de automação robusto em PowerShell (`scripts/start.ps1`) para gerenciar ciclos de vida de containers, checagem de portas e reinicialização de processos.
-* **Mapeamento de Entidades e DTOs**: Criação limpa de estruturas de dados e geração do algoritmo de Seed de dados em lotes (gerando 15.000 pedidos realistas rapidamente em EF Core).
-* **Componentização de UI**: Criação rápida de componentes de interface em React com estilos CSS nativos e responsivos.
+A IA foi utilizada como uma ferramenta de apoio ao desenvolvimento, auxiliando na geração de código repetitivo, validação de ideias e automatização de tarefas de infraestrutura.
 
----
+Todas as decisões arquiteturais, organização do projeto, definição das tecnologias utilizadas e validação das implementações permaneceram sob responsabilidade do desenvolvedor.
 
-## 2. Onde a IA Errou e Correções Feitas
-
-* **MediatR / CQRS por Padrão**: Inicialmente, a IA sugeriu aplicar padrões como CQRS e MediatR como "boas práticas". Isso foi corrigido de imediato, alinhando com a premissa de manter o projeto com a menor quantidade de arquivos possível e evitar abstrações de indireção para um projeto de apenas 3 endpoints.
-* **Imports no Frontend**: A IA tentou usar barrel exports (`index.ts`) para exportar componentes das views. Isso foi removido para facilitar a leitura humana e evitar que IAs leiam importações redundantes.
-* **Processamento Bloqueante**: A IA inicialmente propôs fazer uma chamada HTTP síncrona do .NET para o Node.js. Corrigimos para um disparo em background com `_ = NotifyOrderCreatedAsync(order.Id)` e resposta 202 Accepted no Node.js para garantir acoplamento fraco e resiliência caso o microsserviço esteja desligado.
+Todo código sugerido pela IA foi revisado, adaptado quando necessário e integrado manualmente ao projeto.
 
 ---
 
-## 3. O que Foi Escrito à Mão e Por Quê
+# 1. Onde a IA Contribuiu
 
-* **Divisão de EF Core vs Dapper**: A decisão conceitual de onde usar cada um. O endpoint de Faturamento (`revenue`) foi otimizado manualmente com Dapper em SQL nativo para maximizar performance e legibilidade, enquanto a criação de pedidos foi mantida no EF Core para segurança transacional.
-* **Estilização Visual (global.css)**: Ajustes manuais de cores (Slate e Violet) e estrutura de layout (Backdrop blur / Glassmorphic cards) para garantir que a interface pareça profissional e premium.
-* **Controle de Processos no Script de Start**: Escrita personalizada da lógica de encerramento automático dos processos `dotnet` e `node` que estejam rodando em background para evitar conflito de portas na máquina de teste do avaliador.
+A IA foi utilizada principalmente para acelerar tarefas mecânicas e reduzir tempo de implementação.
+
+### Infraestrutura
+
+Auxiliou na geração inicial dos arquivos de infraestrutura, incluindo:
+
+- `docker-compose.yml`
+- Scripts PowerShell e Batch para inicialização do ambiente
+- Verificações de pré-requisitos
+- Inicialização automatizada dos serviços
+- Rotinas de encerramento de processos utilizando portas conhecidas
+
+Esses arquivos posteriormente foram ajustados manualmente para atender ao fluxo esperado do projeto.
 
 ---
 
-## 4. Estruturação do Projeto para IA (AI-Friendly Design)
+### Estruturas de Dados
 
-Para que uma ferramenta de IA trabalhe com o máximo de produtividade em um repositório, o design do projeto seguiu as seguintes premissas:
-1. **Localização de Contexto (DTOs inline)**: Todos os DTOs foram mantidos na mesma pasta ou arquivo do Controller (`OrderDtos.cs`). Dessa forma, a IA não precisa pular por pastas globais de contratos para entender as assinaturas da API.
-2. **Views Flat**: No React, a pasta `views/orders/` contém arquivos planos (sem subpastas de types, hooks ou components). Isso permite que a IA leia e edite o contexto da funcionalidade com muito menos saltos no sistema de arquivos.
-3. **Padrão de Nomenclatura Estrito**: Nomes como `orders/types.ts` e `orders/useOrders.ts` facilitam o mapeamento mental da IA sobre a função exata de cada arquivo.
-4. **Ausência de Abstrações de Interface Unica**: Não há interfaces para serviços com apenas uma implementação concreta, diminuindo a quantidade de arquivos que a IA precisa indexar.
+A IA auxiliou na geração inicial de:
+
+- Entidades
+- DTOs
+- Seed de dados
+- Objetos auxiliares
+
+O código gerado serviu como ponto de partida e foi refinado durante o desenvolvimento.
+
+---
+
+### Interface React
+
+Foi utilizada para acelerar a criação inicial de componentes React, estrutura HTML e CSS base.
+
+Após a geração inicial foram realizados diversos ajustes manuais na organização visual, estilos, layout e experiência de uso.
+
+---
+
+### Apoio Durante Desenvolvimento
+
+Durante o desenvolvimento a IA também foi utilizada para:
+
+- esclarecer dúvidas pontuais;
+- sugerir alternativas de implementação;
+- revisar trechos de código;
+- identificar possíveis melhorias;
+- auxiliar na documentação do projeto.
+
+---
+
+# 2. Decisões Arquiteturais Tomadas pelo Desenvolvedor
+
+A arquitetura do projeto foi definida manualmente, buscando simplicidade, legibilidade e facilidade de manutenção.
+
+Entre as principais decisões estão:
+
+## Organização das Pastas
+
+A estrutura do projeto foi planejada para facilitar tanto a leitura humana quanto o entendimento por ferramentas de IA.
+
+Foi adotada uma estrutura simples baseada em:
+
+- Controllers
+- Services
+- Entities
+- DbContext
+- DTOs
+- Frontend organizado por funcionalidades
+
+Evitaram-se camadas desnecessárias para reduzir complexidade.
+
+---
+
+## Arquitetura Pragmática
+
+Foi escolhida uma arquitetura baseada em:
+
+Controller
+
+↓
+
+Service
+
+↓
+
+DbContext
+
+Ao invés de utilizar padrões mais complexos como:
+
+- CQRS
+- MediatR
+- Clean Architecture completa
+- DDD
+
+A decisão foi tomada considerando o tamanho do domínio do projeto, que possui apenas alguns endpoints e não justificava múltiplas camadas adicionais.
+
+O objetivo foi manter alta coesão, baixo acoplamento e facilidade de manutenção.
+
+---
+
+## Escolha entre EF Core e Dapper
+
+A definição de quando utilizar cada tecnologia foi realizada manualmente.
+
+Foi adotado:
+
+- EF Core para operações de escrita, criação e atualização de pedidos.
+- Dapper para consultas analíticas de faturamento onde SQL nativo oferece maior desempenho.
+
+Essa divisão buscou equilibrar produtividade e performance.
+
+---
+
+## Comunicação entre Microsserviços
+
+A estratégia de comunicação assíncrona entre a API .NET e o serviço Node.js foi definida manualmente.
+
+O fluxo implementado foi:
+
+API .NET
+
+↓
+
+Node.js
+
+↓
+
+API .NET
+
+permitindo que o processamento ocorra em background sem bloquear a resposta ao usuário.
+
+---
+
+## Organização do Frontend
+
+A estrutura do React foi definida manualmente priorizando simplicidade.
+
+Foram evitadas estruturas excessivamente fragmentadas contendo diversas camadas de:
+
+- hooks
+- services
+- adapters
+- providers
+- barrels
+
+para facilitar manutenção e reduzir navegação entre arquivos.
+
+---
+
+# 3. Sugestões da IA que Foram Rejeitadas ou Adaptadas
+
+Durante o desenvolvimento nem todas as sugestões foram aceitas.
+
+## Uso de CQRS e MediatR
+
+Inicialmente foram sugeridos padrões como CQRS e MediatR.
+
+Após análise foi decidido não utilizá-los por aumentarem significativamente a quantidade de arquivos e abstrações para um domínio pequeno.
+
+---
+
+## Barrel Exports
+
+Foi sugerida a utilização de arquivos `index.ts` para exportação dos componentes.
+
+A estratégia foi descartada para manter os imports explícitos e facilitar navegação no projeto.
+
+---
+
+## Comunicação Síncrona
+
+Inicialmente a IA sugeriu uma chamada HTTP síncrona entre os serviços.
+
+A implementação foi alterada para comunicação assíncrona utilizando disparo em background e resposta HTTP 202 Accepted, reduzindo acoplamento entre os serviços.
+
+---
+
+# 4. Estrutura Pensada para Colaboração com IA
+
+Além da organização voltada para desenvolvedores, o projeto também foi estruturado para facilitar futuras interações com ferramentas de IA.
+
+As principais decisões foram:
+
+- Estrutura de pastas simples e previsível.
+- Nomenclatura consistente de arquivos.
+- Pouca profundidade de diretórios.
+- DTOs próximos dos Controllers.
+- Separação clara entre frontend e backend.
+- Ausência de abstrações desnecessárias.
+- Serviços contendo a maior parte das regras de negócio.
+
+Essa organização reduz o contexto necessário para compreensão do projeto tanto por desenvolvedores quanto por ferramentas de IA.
+
+---
+
+# 5. Considerações Finais
+
+A Inteligência Artificial foi utilizada como uma ferramenta de apoio durante o desenvolvimento, principalmente para acelerar tarefas repetitivas e gerar estruturas iniciais.
+
+As decisões relacionadas à arquitetura, organização do código, definição das tecnologias utilizadas, separação de responsabilidades, fluxo de processamento e revisão das implementações permaneceram sob responsabilidade do desenvolvedor.
+
+Todo código produzido com auxílio da IA passou por análise, adaptação e validação antes de ser incorporado ao projeto.
