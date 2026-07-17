@@ -86,6 +86,7 @@ export const CreateOrderForm = ({ onSubmit, onSuccess }: CreateOrderFormProps) =
                 onChange={e => handleChange(idx, 'product', e.target.value)}
                 onDoubleClick={() => handleChange(idx, 'product', '')}
                 required
+                style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
               />
               <input
                 type="number"
@@ -95,6 +96,7 @@ export const CreateOrderForm = ({ onSubmit, onSuccess }: CreateOrderFormProps) =
                 onChange={e => handleChange(idx, 'quantity', parseInt(e.target.value) || 1)}
                 onDoubleClick={() => handleChange(idx, 'quantity', '')}
                 required
+                style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
               />
               <input
                 type="number"
@@ -105,15 +107,16 @@ export const CreateOrderForm = ({ onSubmit, onSuccess }: CreateOrderFormProps) =
                 onChange={e => handleChange(idx, 'unitPrice', parseFloat(e.target.value) || 0)}
                 onDoubleClick={() => handleChange(idx, 'unitPrice', '')}
                 required
+                style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
               />
               <button
                 type="button"
                 className="btn btn-secondary"
                 onClick={() => handleRemoveItem(idx)}
                 disabled={items.length === 1}
-                style={{ padding: '0.75rem', color: 'var(--danger)', opacity: items.length === 1 ? 0.3 : 1 }}
+                style={{ padding: '0.5rem', color: 'var(--danger)', opacity: items.length === 1 ? 0.3 : 1 }}
               >
-                <Trash2 size={18} />
+                <Trash2 size={16} />
               </button>
             </div>
           ))}

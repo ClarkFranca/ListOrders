@@ -28,7 +28,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     }}>
       <div className="glass" style={{
         width: '100%',
-        maxWidth: '650px',
+        maxWidth: '800px',
         maxHeight: '90vh',
         overflowY: 'auto',
         display: 'flex',
@@ -43,11 +43,11 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
           borderBottom: '1px solid var(--bg-card-border)'
         }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 600, color: 'var(--text-main)' }}>{title}</h2>
-          <button 
+          <button
             onClick={onClose}
-            style={{ 
-              background: 'transparent', 
-              color: 'var(--text-muted)', 
+            style={{
+              background: 'transparent',
+              color: 'var(--text-muted)',
               border: 'none',
               cursor: 'pointer',
               display: 'flex',
