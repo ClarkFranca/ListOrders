@@ -7,7 +7,7 @@ Este documento descreve como as ferramentas de Inteligência Artificial foram ut
 ## 1. Onde a IA Ajudou
 
 A IA foi uma parceira ativa de pair programming, atuando em:
-* **Definição da Arquitetura Pragmática**: Auxiliou no mapeamento do projeto de referência (WMS Nestlé) para encontrar oportunidades de simplificação arquitetural (corte de mappings XML, remoção de interfaces desnecessárias, agregação de DTOs nas pastas dos Controllers).
+* **Definição da Arquitetura Pragmática**: Auxiliou no mapeamento do projeto utilizando referencias de projetos pessoais para encontrar oportunidades de simplificação arquitetural (corte de mappings XML, remoção de interfaces desnecessárias, agregação de DTOs nas pastas dos Controllers).
 * **Geração de Código de Infraestrutura**: Escrita rápida do `docker-compose.yml` e do script de automação robusto em PowerShell (`scripts/start.ps1`) para gerenciar ciclos de vida de containers, checagem de portas e reinicialização de processos.
 * **Mapeamento de Entidades e DTOs**: Criação limpa de estruturas de dados e geração do algoritmo de Seed de dados em lotes (gerando 15.000 pedidos realistas rapidamente em EF Core).
 * **Componentização de UI**: Criação rápida de componentes de interface em React com estilos CSS nativos e responsivos.
